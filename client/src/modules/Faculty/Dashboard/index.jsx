@@ -1,60 +1,20 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  Grid,
-  Paper,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Grid, Paper, Stack, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import PageHeader from "../../../components/PageHeader";
 
-const FacultyDashboard = () => {
+const FacultyDashboard = ({ onCreateAssignment }) => {
+  const navigate = useNavigate();
+
   return (
-    <>
-      <Paper
-        elevation={0}
-        sx={{
-          p: 2,
-          mb: 3,
-          borderRadius: 3,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          border: "1px solid rgba(15,23,42,0.04)",
-          bgcolor: "background.paper",
-        }}
-      >
-        <Typography sx={{ fontWeight: 700 }}>Faculty Dashboard</Typography>
-        <Stack direction="row" spacing={1} alignItems="center">
-          <Typography variant="body2" color="text.secondary">
-            Hi, Prof. Lee
-          </Typography>
-          <Avatar
-            sx={{
-              width: 36,
-              height: 36,
-              bgcolor: "grey.100",
-              color: "text.primary",
-            }}
-          >
-            PL
-          </Avatar>
-        </Stack>
-      </Paper>
-
-      <Typography
-        variant="h3"
-        sx={{
-          fontWeight: 900,
-          mb: 0.5,
-          fontSize: { xs: "1.6rem", md: "2rem" },
-        }}
-      >
-        Welcome back, Prof. Lee
-      </Typography>
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        Overview of your courses, students and upcoming deadlines.
-      </Typography>
+    <Box sx={{ p: 3, maxWidth: "1400px", margin: "0 auto" }}>
+      {/* Header */}
+      <PageHeader
+        title="Welcome back, Prof. Lee"
+        subtitle="Overview of your courses, students and upcoming deadlines."
+        userName="Prof. Lee"
+        userInitials="PL"
+        showUserInfo={true}
+      />
 
       <Grid container spacing={2} sx={{ mb: 2 }}>
         {[
@@ -161,7 +121,11 @@ const FacultyDashboard = () => {
             <Typography sx={{ fontWeight: 700, mb: 1 }}>Assignments</Typography>
             <Stack spacing={1}>
               {[
-                { title: "DSA: Arrays", due: "Aug 30, 2025", passed: "6/10" },
+                {
+                  title: "DSA: Arrays",
+                  due: "Aug 30, 2025",
+                  passed: "6/10",
+                },
                 {
                   title: "Java OOP: Interfaces",
                   due: "Sep 02, 2025",
@@ -208,6 +172,7 @@ const FacultyDashboard = () => {
               <Button
                 variant="contained"
                 color="primary"
+                onClick={onCreateAssignment}
                 sx={{
                   textTransform: "none",
                   borderRadius: 2,
@@ -257,7 +222,7 @@ const FacultyDashboard = () => {
           </Grid>
         </Grid>
       </Paper>
-    </>
+    </Box>
   );
 };
 

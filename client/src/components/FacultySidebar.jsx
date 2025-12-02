@@ -19,6 +19,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { path } from "../config/routes";
 import { logoutUser } from "../redux/slices";
 import CampusCodeIcon from "./CampusCodeIcon";
 
@@ -26,10 +27,26 @@ const FacultySidebar = ({ collapsed, onToggle }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const handleMenuClick = (path) => {
+    if (path) {
+      navigate(path);
+    }
+  };
+
   const menu = [
-    { key: "dashboard", label: "Dashboard", icon: <DashboardIcon /> },
+    {
+      key: "dashboard",
+      label: "Dashboard",
+      path: path.faculty.DASHBOARD,
+      icon: <DashboardIcon />,
+    },
     { key: "batches", label: "Batches", icon: <BarChartIcon /> },
-    { key: "assignments", label: "Assignments", icon: <AssignmentIcon /> },
+    {
+      key: "assignments",
+      label: "Assignments",
+      path: path.faculty.CREATE_ASSIGNMENT,
+      icon: <AssignmentIcon />,
+    },
     { key: "students", label: "Students", icon: <GroupIcon /> },
     { key: "library", label: "Library", icon: <BookIcon /> },
     { key: "settings", label: "Settings", icon: <SettingsIcon /> },
@@ -96,6 +113,7 @@ const FacultySidebar = ({ collapsed, onToggle }) => {
           >
             <ListItem
               button
+              onClick={() => handleMenuClick(m.path)}
               sx={{
                 py: 1.25,
                 borderRadius: 1,

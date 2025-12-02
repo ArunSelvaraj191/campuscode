@@ -2,6 +2,17 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { authAPI } from "./api";
 
+// Read persisted auth state from localStorage so route protection works after reload
+const _storedUser = (() => {
+  try {
+    const v = localStorage.getItem("user");
+    return v ? JSON.parse(v) : null;
+  } catch (e) {
+    return null;
+  }
+})();
+const _hasToken = !!localStorage.getItem("token");
+
 // Auth slice
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
@@ -10,8 +21,14 @@ export const loginUser = createAsyncThunk(
       const response = await authAPI.login(credentials);
       const token = response?.token;
       const user = response?.data;
-      if (token) localStorage.setItem("token", token);
-      if (user) localStorage.setItem("user", JSON.stringify(user));
+      if (token) {
+        localStorage.setItem("token", token);
+        window.token = token;
+      }
+      if (user) {
+        localStorage.setItem("user", JSON.stringify(user));
+        window.user = user;
+      }
       return response.data;
     } catch (error) {
       console.log("error.response :::", error);
@@ -27,6 +44,8 @@ export const logoutUser = createAsyncThunk(
       await authAPI.logout();
       localStorage.removeItem("token");
       localStorage.removeItem("user");
+      delete window.token;
+      delete window.user;
       return;
     } catch (error) {
       return rejectWithValue(error?.message || "Logout failed");
@@ -77,8 +96,8 @@ export const resetPassword = createAsyncThunk(
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    user: null,
-    isAuthenticated: false,
+    user: _storedUser,
+    isAuthenticated: _hasToken,
     isLoading: false,
     error: null,
     resetSuccess: false,
@@ -102,7 +121,7 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.user = action.payload.user;
+        state.user = action.payload;
         state.isAuthenticated = true;
       })
       .addCase(loginUser.rejected, (state, action) => {

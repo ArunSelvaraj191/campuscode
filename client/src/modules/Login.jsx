@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 // import { useAuthActions } from "../hooks/useSagaActions";
 import { useDispatch } from "react-redux";
+import { path } from "../config/routes";
 import { useAuth } from "../hooks/useRedux";
 import { clearError, loginUser } from "../redux/slices";
 const Login = () => {
@@ -23,9 +24,9 @@ const Login = () => {
   const dispatch = useDispatch();
 
   // Redux Saga actions
-  const { isLoading, error, isAuthenticated } = useAuth();
+  const { isLoading, error, isAuthenticated, user } = useAuth();
 
-  console.log("isAuthenticated ::", isAuthenticated);
+  console.log("isAuthenticated ::", isAuthenticated, user);
 
   // Local state
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -36,7 +37,11 @@ const Login = () => {
   useEffect(() => {
     dispatch(clearError());
     if (isAuthenticated) {
-      navigate("/dashboard");
+      if (user?.role === "student") {
+        navigate(path.student.DASHBOARD);
+      } else if (user?.role === "faculty") {
+        navigate(path.faculty.DASHBOARD);
+      }
     }
   }, [isAuthenticated, navigate]);
 
@@ -59,7 +64,7 @@ const Login = () => {
 
   const handleForgot = (e) => {
     e.preventDefault();
-    navigate("/reset");
+    navigate(path.auth.RESET_LOGIN);
   };
 
   if (isAuthenticated) {

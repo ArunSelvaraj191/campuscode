@@ -7,12 +7,13 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 import CampusCodeIcon from "../components/CampusCodeIcon";
+import { path } from "../config/routes";
 
 const LandingPage = () => {
   const navigate = useNavigate();
 
   const handleNavigate = (type) => {
-    navigate("/login", {
+    navigate(path.auth.LOGIN, {
       state: {
         type,
       },

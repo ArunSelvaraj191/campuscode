@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Toast from "../components/Toast";
+import { path } from "../config/routes";
 import { useAuth } from "../hooks/useRedux";
 import { clearResetSuccess, requestPasswordReset } from "../redux/slices";
 
@@ -43,7 +44,7 @@ const ResetLogin = () => {
   const backToSignIn = (e) => {
     e.preventDefault();
     dispatch(clearResetSuccess());
-    navigate("/login");
+    navigate(path.auth.LOGIN);
   };
 
   useEffect(() => {

@@ -1,6 +1,6 @@
-import React from "react";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
+import { path } from "../config/routes";
 import { logout } from "../utils/auth";
 
 const LogoutButton = () => {
@@ -10,7 +10,7 @@ const LogoutButton = () => {
     try {
       await logout();
       // Redirect to login page after successful logout
-      navigate("/login");
+      navigate(path.auth.LOGIN);
     } catch (error) {
       console.error("Logout failed:", error);
       // You might want to show an error message to the user here
