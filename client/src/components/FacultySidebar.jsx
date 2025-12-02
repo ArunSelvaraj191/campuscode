@@ -1,8 +1,10 @@
 import AssignmentIcon from "@mui/icons-material/Assignment";
+import BarChartIcon from "@mui/icons-material/BarChart";
 import BookIcon from "@mui/icons-material/Book";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import GroupIcon from "@mui/icons-material/Group";
 import LogoutIcon from "@mui/icons-material/Logout";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Box from "@mui/material/Box";
@@ -15,26 +17,25 @@ import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import { useNavigate } from "react-router-dom";
-// import { useAuthActions } from "../hooks/useSagaActions";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../redux/slices";
 import CampusCodeIcon from "./CampusCodeIcon";
 
-const Sidebar = ({ collapsed, onToggle }) => {
+const FacultySidebar = ({ collapsed, onToggle }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // const { logout } = useAuthActions();
 
   const menu = [
     { key: "dashboard", label: "Dashboard", icon: <DashboardIcon /> },
+    { key: "batches", label: "Batches", icon: <BarChartIcon /> },
     { key: "assignments", label: "Assignments", icon: <AssignmentIcon /> },
+    { key: "students", label: "Students", icon: <GroupIcon /> },
     { key: "library", label: "Library", icon: <BookIcon /> },
     { key: "settings", label: "Settings", icon: <SettingsIcon /> },
   ];
 
   const handleLogout = () => {
-    // logout();
     dispatch(logoutUser());
     navigate("/");
   };
@@ -64,26 +65,12 @@ const Sidebar = ({ collapsed, onToggle }) => {
         }}
       >
         <Tooltip title={collapsed ? "Open" : "Collapse"}>
-          <IconButton
-            onClick={onToggle}
-            size="small"
-            sx={{
-              color: "#cbd5e1",
-              "&:focus": { outline: "none", boxShadow: "none", border: "none" },
-              "&:active": {
-                outline: "none",
-                boxShadow: "none",
-                border: "none",
-              },
-              "&:hover": { outline: "none", boxShadow: "none", border: "none" },
-            }}
-          >
+          <IconButton onClick={onToggle} size="small" sx={{ color: "#cbd5e1" }}>
             {collapsed ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
         </Tooltip>
       </Box>
 
-      {/* Second row: logo / brand */}
       <Box sx={{ position: "relative", mb: 2, mt: 2 }}>
         <Stack
           direction="row"
@@ -118,7 +105,6 @@ const Sidebar = ({ collapsed, onToggle }) => {
                 gap: 1.25,
                 cursor: "pointer",
                 "&:hover": { bgcolor: "rgba(255,255,255,0.02)" },
-                "&:focus": { outline: "none" }, // Remove focus border
               }}
             >
               <ListItemIcon sx={{ minWidth: 36, color: "#cbd5e1" }}>
@@ -130,7 +116,6 @@ const Sidebar = ({ collapsed, onToggle }) => {
         ))}
       </List>
 
-      {/* Logout button at bottom */}
       <Box
         sx={{
           position: "absolute",
@@ -159,7 +144,6 @@ const Sidebar = ({ collapsed, onToggle }) => {
               cursor: "pointer",
               color: "#ef5350",
               "&:hover": { bgcolor: "rgba(239,83,80,0.1)" },
-              "&:focus": { outline: "none" },
             }}
           >
             <ListItemIcon sx={{ minWidth: 36, color: "#ef5350" }}>
@@ -173,4 +157,4 @@ const Sidebar = ({ collapsed, onToggle }) => {
   );
 };
 
-export default Sidebar;
+export default FacultySidebar;
