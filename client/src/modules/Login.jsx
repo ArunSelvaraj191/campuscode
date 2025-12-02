@@ -1,28 +1,70 @@
-import React from "react";
 import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import Link from "@mui/material/Link";
 import Chip from "@mui/material/Chip";
+import Link from "@mui/material/Link";
+import Paper from "@mui/material/Paper";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-
+// import { useAuthActions } from "../hooks/useSagaActions";
+import { useDispatch } from "react-redux";
+import { useAuth } from "../hooks/useRedux";
+import { clearError, loginUser } from "../redux/slices";
 const Login = () => {
+  const handleBack = (e) => {
+    e.preventDefault();
+    navigate("/");
+  };
   const location = useLocation();
-  const params = new URLSearchParams(location.search);
-  const role = params.get("role") || "";
-  const handleSubmit = (event) => {
+  // const params = new URLSearchParams(location.search);
+  const role = location?.state?.type || "";
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  // Redux Saga actions
+  const { isLoading, error, isAuthenticated } = useAuth();
+
+  console.log("isAuthenticated ::", isAuthenticated);
+
+  // Local state
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [localError, setLocalError] = useState("");
+  // const isAuthenticated = !!localStorage.getItem("token");
+
+  // Redirect on successful login
+  useEffect(() => {
+    dispatch(clearError());
+    if (isAuthenticated) {
+      navigate("/dashboard");
+    }
+  }, [isAuthenticated, navigate]);
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({ email: data.get("email"), password: data.get("password") });
+    const email = data.get("email");
+    const password = data.get("password");
+
+    dispatch(clearError());
+    if (!email || !password) {
+      setLocalError("Email and password are required.");
+      return;
+    } else {
+      setLocalError("");
+      console.log("Details :::", email, password);
+      dispatch(loginUser({ email, password, role }));
+    }
   };
-  const navigate = useNavigate();
 
   const handleForgot = (e) => {
     e.preventDefault();
     navigate("/reset");
   };
+
+  if (isAuthenticated) {
+    return <div>Redirecting to dashboard...</div>;
+  }
 
   return (
     <Box
@@ -63,6 +105,22 @@ const Login = () => {
         </Box>
 
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          {(localError || error) && (
+            <Typography
+              variant="body2"
+              sx={{
+                color: "#d32f2f",
+                backgroundColor: "#ffebee",
+                padding: "8px 12px",
+                borderRadius: "4px",
+                marginBottom: "12px",
+                textAlign: "center",
+              }}
+            >
+              {localError || error}
+            </Typography>
+          )}
+
           <TextField
             margin="normal"
             required
@@ -72,6 +130,7 @@ const Login = () => {
             name="email"
             autoComplete="email"
             size="small"
+            disabled={isLoading}
           />
 
           <TextField
@@ -84,12 +143,14 @@ const Login = () => {
             id="password"
             autoComplete="current-password"
             size="small"
+            disabled={isLoading}
           />
 
           <Button
             type="submit"
             fullWidth
             variant="contained"
+            disabled={isLoading}
             sx={{
               mt: 2,
               mb: 1,
@@ -98,7 +159,7 @@ const Login = () => {
               background: "linear-gradient(180deg,#2b7cf9,#2370e6)",
             }}
           >
-            Sign In
+            {isLoading ? "Signing In..." : "Sign In"}
           </Button>
         </Box>
 
@@ -111,6 +172,15 @@ const Login = () => {
           >
             Forget Password?
           </Link>
+          <br />
+          <Button
+            variant="text"
+            onClick={handleBack}
+            sx={{ mt: 1, fontWeight: 700 }}
+            fullWidth
+          >
+            Back to Home
+          </Button>
         </Box>
       </Paper>
     </Box>

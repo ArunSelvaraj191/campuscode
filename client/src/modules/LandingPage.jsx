@@ -1,16 +1,23 @@
-import React from "react";
 import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import { useNavigate } from "react-router-dom";
-import Stack from "@mui/material/Stack";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import Container from "@mui/material/Container";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { useNavigate } from "react-router-dom";
 import CampusCodeIcon from "../components/CampusCodeIcon";
 
 const LandingPage = () => {
   const navigate = useNavigate();
+
+  const handleNavigate = (type) => {
+    navigate("/login", {
+      state: {
+        type,
+      },
+    });
+  };
 
   return (
     <Box
@@ -50,7 +57,7 @@ const LandingPage = () => {
             <Button
               variant="contained"
               color="primary"
-              onClick={() => navigate("/login?role=student")}
+              onClick={() => handleNavigate("student")}
               sx={{
                 borderRadius: 2,
                 px: 3,
@@ -62,7 +69,7 @@ const LandingPage = () => {
             </Button>
             <Button
               variant="contained"
-              onClick={() => navigate("/login?role=faculty")}
+              onClick={() => handleNavigate("faculty")}
               sx={{
                 bgcolor: "#111",
                 color: "#fff",

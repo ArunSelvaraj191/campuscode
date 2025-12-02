@@ -1,20 +1,29 @@
 import nodemailer from "nodemailer";
 
+const port = Number(process.env.SMTP_PORT) || 587;
+const secure = port === 465; // implicit TLS on 465, STARTTLS on 587
+
 // Create a transporter using SMTP
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || "smtp.gmail.com",
-  port: process.env.SMTP_PORT || 587,
-  secure: false, // true for 465, false for other ports
+  port,
+  secure,
   auth: {
-    user: process.env.SMTP_USER, // your email
-    pass: process.env.SMTP_PASS, // your password or app-specific password
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
   },
+  requireTLS: !secure, // use STARTTLS when not using implicit TLS
+  tls: {
+    // DEV: allow self-signed certs only when not in production
+    rejectUnauthorized: process.env.NODE_ENV === "production",
+  },
+  // increase timeouts to avoid "Greeting never received" on slow networks
+  greetingTimeout: 30000,
+  connectionTimeout: 30000,
 });
 
 export const sendResetPasswordEmail = async (email, resetToken) => {
-  const resetLink = `${
-    process.env.CLIENT_URL || "http://localhost:5173"
-  }/reset-password/${resetToken}`;
+  const resetLink = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
 
   const mailOptions = {
     from: process.env.SMTP_USER,
