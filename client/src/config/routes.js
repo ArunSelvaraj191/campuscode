@@ -1,15 +1,20 @@
 const routes = {
   BASE_FACULTY: "/faculty",
-  BASE_sTUDENT: "/student",
+  BASE_STUDENT: "/student",
 };
 
 const facultyRoutes = {
   DASHBOARD: `${routes.BASE_FACULTY}/dashboard`,
-  CREATE_ASSIGNMENT: `${routes.BASE_FACULTY}/assignment`,
+  ASSIGNMENT: `${routes.BASE_FACULTY}/assignment`,
+  CREATE_ASSIGNMENT: `${routes.BASE_FACULTY}/assignment/create`,
+  EDIT_ASSIGNMENT: `${routes.BASE_FACULTY}/assignment/edit/:id`,
+  BATCH: `${routes.BASE_FACULTY}/batch`,
+  CREATE_BATCH: `${routes.BASE_FACULTY}/batch/create`,
+  EDIT_BATCH: `${routes.BASE_FACULTY}/batch/edit/:id`,
 };
 
 const studentRoutes = {
-  DASHBOARD: `${routes.BASE_sTUDENT}/dashboard`,
+  DASHBOARD: `${routes.BASE_STUDENT}/dashboard`,
 };
 
 const authRoutes = {

@@ -12,8 +12,13 @@ const ResetPassword = lazy(() => import("./modules/ResetPassword.jsx"));
 const FacultyLayout = lazy(() => import("./modules/Faculty/FacultyLayout.jsx"));
 const StudentLayout = lazy(() => import("./modules/Student/StudentLayout.jsx"));
 const FacultyDashboard = lazy(() => import("./modules/Faculty/Dashboard"));
-const CreateAssignment = lazy(() => import("./modules/Faculty/Assignment"));
+const Assignment = lazy(() => import("./modules/Faculty/Assignment"));
+const AssignmentForm = lazy(() =>
+  import("./modules/Faculty/Assignment/CreateAssignment.jsx")
+);
 const StudentDashboard = lazy(() => import("./modules/Student/Dashboard"));
+const Batch = lazy(() => import("./modules/Faculty/Batch"));
+const BatchForm = lazy(() => import("./modules/Faculty/Batch/createBatch.jsx"));
 
 function App() {
   return (
@@ -37,14 +42,22 @@ function App() {
               path={path.faculty.DASHBOARD}
               element={<FacultyDashboard />}
             />
+            <Route path={path.faculty.ASSIGNMENT} element={<Assignment />} />
             <Route
               path={path.faculty.CREATE_ASSIGNMENT}
-              element={<CreateAssignment />}
+              element={<AssignmentForm />}
             />
+            <Route
+              path={path.faculty.EDIT_ASSIGNMENT}
+              element={<AssignmentForm />}
+            />
+            <Route path={path.faculty.BATCH} element={<Batch />} />
+            <Route path={path.faculty.CREATE_BATCH} element={<BatchForm />} />
+            <Route path={path.faculty.EDIT_BATCH} element={<BatchForm />} />
           </Route>
           {/* Student Routes with Layout */}
           <Route
-            path={routes.BASE_sTUDENT}
+            path={routes.BASE_STUDENT}
             element={
               <ProtectedRoute allowedRoles={"student"}>
                 <StudentLayout />

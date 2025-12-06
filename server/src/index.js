@@ -24,11 +24,6 @@ sequelize
   .then(() => console.log("✅ PostgreSQL Connected"))
   .catch((err) => console.error("❌ DB Connection Error:", err));
 
-// Example Route
-app.get("/", (req, res) => {
-  res.send("🚀 Node + PostgreSQL running!");
-});
-
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

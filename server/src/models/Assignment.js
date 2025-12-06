@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
-import User from "./User.js";
 import Batch from "./Batch.js";
+import User from "./User.js";
 
 const Assignment = sequelize.define(
   "Assignment",
@@ -20,7 +20,7 @@ const Assignment = sequelize.define(
       allowNull: true,
     },
     auto_evaluation: {
-      type: DataTypes.BOOLEAN,
+      type: DataTypes.TEXT,
       defaultValue: false,
     },
     due_date: {
@@ -88,6 +88,12 @@ Assignment.belongsTo(User, {
 const AssignmentBatch = sequelize.define(
   "AssignmentBatch",
   {
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+    },
     assignment_id: {
       type: DataTypes.INTEGER,
       allowNull: false,

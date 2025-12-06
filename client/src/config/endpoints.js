@@ -4,6 +4,8 @@ const endpoints = {
   REQUEST_RESET_PASSWORD: "/auth/request-reset",
   VERIFY_RESET_TOKEN: "/auth/verify-reset",
   RESET_PASSWORD: "/auth/reset-password",
+  ASSIGNMENTS: "/assignments",
+  BATCHES: "/batches",
 };
 
 export default endpoints;

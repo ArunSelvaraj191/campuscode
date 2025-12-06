@@ -1,28 +1,29 @@
 import express from "express";
 import {
   createAssignment,
-  updateAssignment,
+  deleteAssignment,
   getAllAssignments,
   getAssignment,
-  deleteAssignment,
+  updateAssignment,
 } from "../controllers/assignmentController.js";
+import { checkFacultyRole } from "../middleware/checkFacultyRole.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router();
 
-// POST /api/assignments (protected)
-router.post("/", verifyToken, createAssignment);
+// POST /api/assignments (protected - faculty only)
+router.post("/", verifyToken, checkFacultyRole, createAssignment);
 
 // GET all
-router.get("/", getAllAssignments);
+router.get("/", verifyToken, getAllAssignments);
 
 // GET one
-router.get("/:id", getAssignment);
+router.get("/:id", verifyToken, getAssignment);
 
-// PUT update (protected)
-router.put("/:id", verifyToken, updateAssignment);
+// PUT update (protected - faculty only)
+router.put("/:id", verifyToken, checkFacultyRole, updateAssignment);
 
-// DELETE (protected)
+// DELETE (protected - faculty only)
 router.delete("/:id", verifyToken, deleteAssignment);
 
 export default router;

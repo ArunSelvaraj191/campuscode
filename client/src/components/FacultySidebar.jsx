@@ -40,11 +40,16 @@ const FacultySidebar = ({ collapsed, onToggle }) => {
       path: path.faculty.DASHBOARD,
       icon: <DashboardIcon />,
     },
-    { key: "batches", label: "Batches", icon: <BarChartIcon /> },
+    {
+      key: "batches",
+      label: "Batches",
+      path: path.faculty.BATCH,
+      icon: <BarChartIcon />,
+    },
     {
       key: "assignments",
       label: "Assignments",
-      path: path.faculty.CREATE_ASSIGNMENT,
+      path: path.faculty.ASSIGNMENT,
       icon: <AssignmentIcon />,
     },
     { key: "students", label: "Students", icon: <GroupIcon /> },

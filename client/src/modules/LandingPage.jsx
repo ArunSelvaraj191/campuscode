@@ -13,11 +13,13 @@ const LandingPage = () => {
   const navigate = useNavigate();
 
   const handleNavigate = (type) => {
-    navigate(path.auth.LOGIN, {
-      state: {
-        type,
-      },
-    });
+    if (type) {
+      navigate(path.auth.LOGIN, {
+        state: {
+          type,
+        },
+      });
+    }
   };
 
   return (
