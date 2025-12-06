@@ -1,12 +1,12 @@
-import { Box, Button, Grid, Paper, Stack, Typography } from "@mui/material";
+import { Box, Grid, Paper, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import PageHeader from "../../../components/PageHeader";
 
-const FacultyDashboard = ({ onCreateAssignment }) => {
+const FacultyDashboard = () => {
   const navigate = useNavigate();
 
   return (
-    <Box sx={{ p: 3, maxWidth: "1400px", margin: "0 auto" }}>
+    <Box sx={{ maxWidth: "1400px", margin: "0 auto" }}>
       {/* Header */}
       <PageHeader
         title="Welcome back, Prof. Lee"
@@ -25,7 +25,7 @@ const FacultyDashboard = ({ onCreateAssignment }) => {
           { label: "Completed Assignments", value: "120" },
           { label: "Upcoming Events", value: "5" },
         ].map((c, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index}>
+          <Grid item size={{ xs: 12, sm: 6, md: 4 }} key={index}>
             <Paper
               elevation={0}
               sx={{
@@ -54,7 +54,7 @@ const FacultyDashboard = ({ onCreateAssignment }) => {
       </Grid>
 
       <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
+        <Grid item size={{ xs: 12, md: 6 }}>
           <Paper
             elevation={0}
             sx={{
@@ -108,7 +108,7 @@ const FacultyDashboard = ({ onCreateAssignment }) => {
           </Paper>
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid item size={{ xs: 12, md: 6 }}>
           <Paper
             elevation={0}
             sx={{
@@ -156,72 +156,6 @@ const FacultyDashboard = ({ onCreateAssignment }) => {
           </Paper>
         </Grid>
       </Grid>
-
-      <Paper
-        sx={{
-          mt: 3,
-          p: 2.25,
-          borderRadius: 2,
-          border: "1px solid rgba(15,23,42,0.04)",
-        }}
-        elevation={0}
-      >
-        <Grid container alignItems="center">
-          <Grid item xs={12} md={8}>
-            <Stack direction="row" spacing={2}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={onCreateAssignment}
-                sx={{
-                  textTransform: "none",
-                  borderRadius: 2,
-                  px: 3,
-                  background: "linear-gradient(180deg,#2b7cf9,#2370e6)",
-                }}
-              >
-                Create Assignment
-              </Button>
-              <Button
-                variant="outlined"
-                sx={{ textTransform: "none", borderRadius: 2 }}
-              >
-                Export Report
-              </Button>
-            </Stack>
-          </Grid>
-          <Grid
-            item
-            xs={12}
-            md={4}
-            sx={{
-              textAlign: { xs: "left", md: "right" },
-              mt: { xs: 2, md: 0 },
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <Box>
-                <Typography variant="subtitle2">Engagement</Typography>
-                <Typography sx={{ fontWeight: 700 }}>
-                  Active students: 136{" "}
-                </Typography>
-              </Box>
-              <Box
-                component="span"
-                sx={{ color: "success.main", fontWeight: 700, ml: 1 }}
-              >
-                +4.2%
-              </Box>
-            </Box>
-          </Grid>
-        </Grid>
-      </Paper>
     </Box>
   );
 };

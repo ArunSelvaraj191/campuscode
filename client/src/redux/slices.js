@@ -1,6 +1,12 @@
 // Single file containing all slices
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { assignmentsAPI, authAPI, batchesAPI } from "./api";
+import {
+  assignmentsAPI,
+  authAPI,
+  batchesAPI,
+  facultyAPI,
+  studentsAPI,
+} from "./api";
 
 // Read persisted auth state from localStorage so route protection works after reload
 const _storedUser = (() => {
@@ -61,6 +67,19 @@ export const requestPasswordReset = createAsyncThunk(
       return response.data;
     } catch (error) {
       return rejectWithValue(error?.message || "Failed to send reset email");
+    }
+  }
+);
+
+// Get user by type
+export const getUserByType = createAsyncThunk(
+  "auth/getUserByType",
+  async (userType, { rejectWithValue }) => {
+    try {
+      const response = await authAPI.getUserByType(userType);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error?.message || "Failed to fetch users by type");
     }
   }
 );
@@ -212,6 +231,128 @@ export const deleteBatch = createAsyncThunk(
       return data;
     } catch (error) {
       return rejectWithValue(error?.message || "Failed to delete batch");
+    }
+  }
+);
+
+// Students thunks
+export const fetchStudents = createAsyncThunk(
+  "students/fetchAll",
+  async ({ page = 1, limit = 10 } = {}, { rejectWithValue }) => {
+    try {
+      const response = await studentsAPI.getAll({ page, limit });
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.message || "Failed to fetch students");
+    }
+  }
+);
+
+export const fetchStudent = createAsyncThunk(
+  "students/fetchOne",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await studentsAPI.getOne(id);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.message || "Failed to fetch student");
+    }
+  }
+);
+
+export const createStudent = createAsyncThunk(
+  "students/create",
+  async (studentData, { rejectWithValue }) => {
+    try {
+      const data = await studentsAPI.create(studentData);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error?.message || "Failed to create student");
+    }
+  }
+);
+
+export const updateStudent = createAsyncThunk(
+  "students/update",
+  async ({ id, studentData }, { rejectWithValue }) => {
+    try {
+      const data = await studentsAPI.update(id, studentData);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error?.message || "Failed to update student");
+    }
+  }
+);
+
+export const deleteStudent = createAsyncThunk(
+  "students/delete",
+  async (id, { rejectWithValue }) => {
+    try {
+      const data = await studentsAPI.delete(id);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error?.message || "Failed to delete student");
+    }
+  }
+);
+
+// Faculty thunks
+export const fetchFaculty = createAsyncThunk(
+  "faculty/fetchAll",
+  async ({ page = 1, limit = 10 } = {}, { rejectWithValue }) => {
+    try {
+      const response = await facultyAPI.getAll({ page, limit });
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.message || "Failed to fetch faculty");
+    }
+  }
+);
+
+export const fetchFacultyById = createAsyncThunk(
+  "faculty/fetchOne",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await facultyAPI.getOne(id);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.message || "Failed to fetch faculty");
+    }
+  }
+);
+
+export const createFaculty = createAsyncThunk(
+  "faculty/create",
+  async (facultyData, { rejectWithValue }) => {
+    try {
+      const data = await facultyAPI.create(facultyData);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error?.message || "Failed to create faculty");
+    }
+  }
+);
+
+export const updateFaculty = createAsyncThunk(
+  "faculty/update",
+  async ({ id, facultyData }, { rejectWithValue }) => {
+    try {
+      const data = await facultyAPI.update(id, facultyData);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error?.message || "Failed to update faculty");
+    }
+  }
+);
+
+export const deleteFaculty = createAsyncThunk(
+  "faculty/delete",
+  async (id, { rejectWithValue }) => {
+    try {
+      const data = await facultyAPI.delete(id);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error?.message || "Failed to delete faculty");
     }
   }
 );
@@ -515,9 +656,197 @@ const batchesSlice = createSlice({
 
 export const { clearBatches } = batchesSlice.actions;
 
+// Students slice
+const studentsSlice = createSlice({
+  name: "students",
+  initialState: {
+    list: [],
+    isLoading: false,
+    error: null,
+    createSuccess: false,
+    createMessage: null,
+    meta: { total: 0, page: 1, limit: 10, totalPages: 0 },
+  },
+  reducers: {
+    clearStudents: (state) => {
+      state.list = [];
+      state.error = null;
+      state.createSuccess = false;
+      state.createMessage = null;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchStudents.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchStudents.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.list = action.payload?.data || [];
+        state.meta = action.payload?.meta || state.meta;
+      })
+      .addCase(fetchStudents.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      .addCase(fetchStudent.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchStudent.fulfilled, (state, action) => {
+        state.isLoading = false;
+      })
+      .addCase(fetchStudent.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      .addCase(createStudent.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+        state.createSuccess = false;
+      })
+      .addCase(createStudent.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.createSuccess = true;
+        if (action.payload) state.list.unshift(action.payload);
+        state.createMessage = action.payload?.message || null;
+      })
+      .addCase(createStudent.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+        state.createSuccess = false;
+      })
+      .addCase(updateStudent.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(updateStudent.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const index = state.list.findIndex((s) => s.id === action.payload?.id);
+        if (index !== -1) {
+          state.list[index] = action.payload;
+        }
+      })
+      .addCase(updateStudent.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      .addCase(deleteStudent.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(deleteStudent.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.list = state.list.filter((s) => s.id !== action.meta.arg);
+      })
+      .addCase(deleteStudent.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      });
+  },
+});
+
+export const { clearStudents } = studentsSlice.actions;
+
+// Faculty slice
+const facultySlice = createSlice({
+  name: "faculty",
+  initialState: {
+    list: [],
+    isLoading: false,
+    error: null,
+    createSuccess: false,
+    createMessage: null,
+    meta: { total: 0, page: 1, limit: 10, totalPages: 0 },
+  },
+  reducers: {
+    clearFaculty: (state) => {
+      state.list = [];
+      state.error = null;
+      state.createSuccess = false;
+      state.createMessage = null;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchFaculty.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchFaculty.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.list = action.payload?.data || [];
+        state.meta = action.payload?.meta || state.meta;
+      })
+      .addCase(fetchFaculty.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      .addCase(fetchFacultyById.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchFacultyById.fulfilled, (state, action) => {
+        state.isLoading = false;
+      })
+      .addCase(fetchFacultyById.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      .addCase(createFaculty.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+        state.createSuccess = false;
+      })
+      .addCase(createFaculty.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.createSuccess = true;
+        if (action.payload) state.list.unshift(action.payload);
+        state.createMessage = action.payload?.message || null;
+      })
+      .addCase(createFaculty.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+        state.createSuccess = false;
+      })
+      .addCase(updateFaculty.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(updateFaculty.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const index = state.list.findIndex((f) => f.id === action.payload?.id);
+        if (index !== -1) {
+          state.list[index] = action.payload;
+        }
+      })
+      .addCase(updateFaculty.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      .addCase(deleteFaculty.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(deleteFaculty.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.list = state.list.filter((f) => f.id !== action.meta.arg);
+      })
+      .addCase(deleteFaculty.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      });
+  },
+});
+
+export const { clearFaculty } = facultySlice.actions;
+
 export default {
   auth: authSlice.reducer,
   dashboard: dashboardSlice.reducer,
   assignments: assignmentsSlice.reducer,
   batches: batchesSlice.reducer,
+  students: studentsSlice.reducer,
+  faculty: facultySlice.reducer,
 };

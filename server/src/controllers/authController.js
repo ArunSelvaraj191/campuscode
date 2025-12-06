@@ -79,59 +79,6 @@ export const logoutUser = async (req, res) => {
     return sendServerError(res, err);
   }
 };
-// ...existing code...
-
-// Get all users
-export const getUsers = async (req, res) => {
-  try {
-    const users = await User.findAll();
-    res.json(users);
-  } catch (err) {
-    return sendServerError(res, err);
-  }
-};
-
-// Create a new user
-export const createUser = async (req, res) => {
-  try {
-    console.log("req.body :", req.body);
-    const { name, email, password, role } = req.body;
-    if (!name || !email || !password || !role) {
-      return sendValidationError(
-        res,
-        "All fields (name, email, password, role) are required."
-      );
-    }
-    if (!["student", "faculty", "admin"].includes(role)) {
-      return sendValidationError(
-        res,
-        "Role must be student, faculty, or admin."
-      );
-    }
-
-    // Hash password before saving
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    const user = await User.create({
-      name,
-      email,
-      password: hashedPassword,
-      role,
-    });
-
-    // Don't send password in response
-    const userResponse = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-    };
-    res.status(201).json(userResponse);
-  } catch (err) {
-    return sendServerError(res, err);
-  }
-};
 
 // Request password reset
 export const requestPasswordReset = async (req, res) => {
@@ -270,6 +217,72 @@ export const resetPassword = async (req, res) => {
     });
 
     res.json({ message: "Password reset successful", data: matchedUser });
+  } catch (err) {
+    return sendServerError(res, err);
+  }
+};
+
+// Get all users
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.findAll();
+    res.json(users);
+  } catch (err) {
+    return sendServerError(res, err);
+  }
+};
+
+// Get all users
+export const getUsers = async (req, res) => {
+  const { user_type } = req.params;
+  console.log("Get Users called", user_type);
+  try {
+    const users = await User.findAll({
+      where: { role: { [Op.eq]: user_type } },
+    });
+    res.json(users);
+  } catch (err) {
+    return sendServerError(res, err);
+  }
+};
+
+// Create a new user
+export const createUser = async (req, res) => {
+  try {
+    console.log("req.body :", req.body);
+    const { name, email, password, role } = req.body;
+    if (!name || !email || !password || !role) {
+      return sendValidationError(
+        res,
+        "All fields (name, email, password, role) are required."
+      );
+    }
+    if (!["student", "faculty", "admin"].includes(role)) {
+      return sendValidationError(
+        res,
+        "Role must be student, faculty, or admin."
+      );
+    }
+
+    // Hash password before saving
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const user = await User.create({
+      name,
+      email,
+      password: hashedPassword,
+      role,
+    });
+
+    // Don't send password in response
+    const userResponse = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    };
+    res.status(201).json(userResponse);
   } catch (err) {
     return sendServerError(res, err);
   }

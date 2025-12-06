@@ -24,6 +24,7 @@ import {
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import PageHeader from "../../../components/PageHeader.jsx";
 import { path } from "../../../config/routes.js";
 import { deleteBatch, fetchBatches } from "../../../redux/slices";
 
@@ -109,7 +110,7 @@ export default function Batch() {
   };
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box>
       {/* Header */}
       <Stack
         direction="row"
@@ -117,9 +118,7 @@ export default function Batch() {
         alignItems="center"
         sx={{ mb: 3 }}
       >
-        <Typography variant="h4" fontWeight="bold">
-          Batches
-        </Typography>
+        <PageHeader title="Batches" />
         <Button
           variant="contained"
           startIcon={<AddIcon />}

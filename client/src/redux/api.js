@@ -11,6 +11,10 @@ export const authAPI = {
   verifyResetToken: (token) =>
     axiosInstance.get(`${endpoints.VERIFY_RESET_TOKEN}/${token}`),
   resetPassword: (data) => axiosInstance.post(endpoints.RESET_PASSWORD, data),
+  getUserByType: (userType) =>
+    axiosInstance.get(endpoints.USER_LIST, {
+      params: { type: userType },
+    }),
 };
 
 export const assignmentsAPI = {
@@ -41,6 +45,34 @@ export const batchesAPI = {
     axiosInstance.put(`${endpoints.BATCHES}/${id}`, batchData),
   // DELETE /api/batches/:id
   delete: (id) => axiosInstance.delete(`${endpoints.BATCHES}/${id}`),
+};
+
+export const studentsAPI = {
+  // GET /api/students with optional params { page, limit }
+  getAll: (params = {}) => axiosInstance.get(endpoints.STUDENTS, { params }),
+  // GET /api/students/:id
+  getOne: (id) => axiosInstance.get(`${endpoints.STUDENTS}/${id}`),
+  // POST /api/students
+  create: (studentData) => axiosInstance.post(endpoints.STUDENTS, studentData),
+  // PUT /api/students/:id
+  update: (id, studentData) =>
+    axiosInstance.put(`${endpoints.STUDENTS}/${id}`, studentData),
+  // DELETE /api/students/:id
+  delete: (id) => axiosInstance.delete(`${endpoints.STUDENTS}/${id}`),
+};
+
+export const facultyAPI = {
+  // GET /api/faculty with optional params { page, limit }
+  getAll: (params = {}) => axiosInstance.get(endpoints.FACULTY, { params }),
+  // GET /api/faculty/:id
+  getOne: (id) => axiosInstance.get(`${endpoints.FACULTY}/${id}`),
+  // POST /api/faculty
+  create: (facultyData) => axiosInstance.post(endpoints.FACULTY, facultyData),
+  // PUT /api/faculty/:id
+  update: (id, facultyData) =>
+    axiosInstance.put(`${endpoints.FACULTY}/${id}`, facultyData),
+  // DELETE /api/faculty/:id
+  delete: (id) => axiosInstance.delete(`${endpoints.FACULTY}/${id}`),
 };
 
 export default axiosInstance;

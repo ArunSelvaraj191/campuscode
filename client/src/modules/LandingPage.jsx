@@ -84,6 +84,20 @@ const LandingPage = () => {
             >
               Faculty Login
             </Button>
+            <Button
+              variant="contained"
+              onClick={() => handleNavigate("admin")}
+              sx={{
+                bgcolor: "#1565c0",
+                color: "#fff",
+                borderRadius: 2,
+                px: 3,
+                py: 1.25,
+                "&:hover": { bgcolor: "#1e40af" },
+              }}
+            >
+              Admin Login
+            </Button>
           </Stack>
 
           <Stack

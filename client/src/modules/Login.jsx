@@ -29,7 +29,7 @@ const Login = () => {
   console.log("isAuthenticated ::", isAuthenticated, user);
 
   // Local state
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  // const [formData, setFormData] = useState({ email: "", password: "" });
   const [localError, setLocalError] = useState("");
   // const isAuthenticated = !!localStorage.getItem("token");
 
@@ -41,6 +41,8 @@ const Login = () => {
         navigate(path.student.DASHBOARD);
       } else if (user?.role === "faculty") {
         navigate(path.faculty.DASHBOARD);
+      } else if (user?.role === "admin") {
+        navigate(path.admin.DASHBOARD);
       }
     }
   }, [isAuthenticated, navigate]);
@@ -64,7 +66,7 @@ const Login = () => {
 
   const handleForgot = (e) => {
     e.preventDefault();
-    navigate(path.auth.RESET_LOGIN);
+    navigate(path.auth.RESET);
   };
 
   if (isAuthenticated) {
@@ -101,7 +103,7 @@ const Login = () => {
           </Typography>
           {role ? (
             <Chip
-              label={role === "student" ? "Student" : "Faculty"}
+              label={role.charAt(0).toUpperCase() + role.slice(1)}
               size="small"
               color="primary"
               sx={{ mt: 1, fontWeight: 700 }}

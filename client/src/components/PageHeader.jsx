@@ -6,16 +6,16 @@ const PageHeader = ({
   userName = "Prof. Lee",
   userInitials = "PL",
   avatarBgColor = "grey.100",
-  showUserInfo = true,
+  showUserInfo = false,
 }) => {
   return (
     <>
       {/* Top Header with User Info */}
-      {showUserInfo && (
+      {showUserInfo ? (
         <Paper
           elevation={0}
           sx={{
-            p: 2,
+            p: 1,
             mb: 3,
             borderRadius: 3,
             display: "flex",
@@ -25,7 +25,16 @@ const PageHeader = ({
             bgcolor: "background.paper",
           }}
         >
-          <Typography sx={{ fontWeight: 700 }}>{title}</Typography>
+          <Typography
+            variant="h3"
+            sx={{
+              fontWeight: 900,
+              mb: 0.5,
+              fontSize: { xs: "1.6rem", md: "2rem" },
+            }}
+          >
+            {title}
+          </Typography>
           <Stack direction="row" spacing={1} alignItems="center">
             <Typography variant="body2" color="text.secondary">
               Hi, {userName}
@@ -42,23 +51,25 @@ const PageHeader = ({
             </Avatar>
           </Stack>
         </Paper>
-      )}
-
-      {/* Title and Subtitle */}
-      <Typography
-        variant="h3"
-        sx={{
-          fontWeight: 900,
-          mb: 0.5,
-          fontSize: { xs: "1.6rem", md: "2rem" },
-        }}
-      >
-        {title}
-      </Typography>
-      {subtitle && (
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-          {subtitle}
-        </Typography>
+      ) : (
+        <>
+          {/* Title and Subtitle */}
+          <Typography
+            variant="h3"
+            sx={{
+              fontWeight: 900,
+              mb: 0.5,
+              fontSize: { xs: "1.6rem", md: "2rem" },
+            }}
+          >
+            {title}
+          </Typography>
+          {subtitle && (
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+              {subtitle}
+            </Typography>
+          )}
+        </>
       )}
     </>
   );

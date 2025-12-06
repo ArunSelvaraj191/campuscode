@@ -1,6 +1,3 @@
-import AssignmentIcon from "@mui/icons-material/Assignment";
-import BarChartIcon from "@mui/icons-material/BarChart";
-import BookIcon from "@mui/icons-material/Book";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -23,7 +20,7 @@ import { path } from "../config/routes";
 import { logoutUser } from "../redux/slices";
 import CampusCodeIcon from "./CampusCodeIcon";
 
-const FacultySidebar = ({ collapsed, onToggle }) => {
+const AdminSidebar = ({ collapsed, onToggle }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -37,29 +34,21 @@ const FacultySidebar = ({ collapsed, onToggle }) => {
     {
       key: "dashboard",
       label: "Dashboard",
-      path: path.faculty.DASHBOARD,
+      path: path.admin.DASHBOARD,
       icon: <DashboardIcon />,
     },
     {
-      key: "batches",
-      label: "Batches",
-      path: path.faculty.BATCH,
-      icon: <BarChartIcon />,
-    },
-    {
-      key: "assignments",
-      label: "Assignments",
-      path: path.faculty.ASSIGNMENT,
-      icon: <AssignmentIcon />,
-    },
-    {
-      key: "students",
-      label: "Students",
-      path: path.faculty.STUDENT,
+      key: "faculty",
+      label: "Faculty",
+      path: path.admin.FACULTY,
       icon: <GroupIcon />,
     },
-    { key: "library", label: "Library", icon: <BookIcon /> },
-    { key: "settings", label: "Settings", icon: <SettingsIcon /> },
+    {
+      key: "settings",
+      label: "Settings",
+      path: path.admin.SETTINGS,
+      icon: <SettingsIcon />,
+    },
   ];
 
   const handleLogout = () => {
@@ -107,7 +96,7 @@ const FacultySidebar = ({ collapsed, onToggle }) => {
         >
           <CampusCodeIcon size={16} color="primary.main" />
           {!collapsed && (
-            <Typography sx={{ fontWeight: 800 }}>CampusCode</Typography>
+            <Typography sx={{ fontWeight: 800 }}>CampusCode Admin</Typography>
           )}
         </Stack>
       </Box>
@@ -185,4 +174,4 @@ const FacultySidebar = ({ collapsed, onToggle }) => {
   );
 };
 
-export default FacultySidebar;
+export default AdminSidebar;

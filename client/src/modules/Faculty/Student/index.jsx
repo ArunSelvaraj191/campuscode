@@ -26,41 +26,39 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import PageHeader from "../../../components/PageHeader.jsx";
 import { path } from "../../../config/routes.js";
-import { deleteAssignment, fetchAssignments } from "../../../redux/slices";
+import { deleteStudent, fetchStudents } from "../../../redux/slices";
 
-export default function Assignment() {
+export default function Student() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [assignments, setAssignments] = useState([]);
+  const [students, setStudents] = useState([]);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [selectedAssignmentId, setSelectedAssignmentId] = useState(null);
+  const [selectedStudentId, setSelectedStudentId] = useState(null);
   const meta = useSelector(
-    (s) =>
-      s.assignments?.meta || { page: 1, limit: 10, total: 0, totalPages: 0 }
+    (s) => s.students?.meta || { page: 1, limit: 10, total: 0, totalPages: 0 }
   );
   const [page, setPage] = useState(meta.page - 1);
   const [rowsPerPage, setRowsPerPage] = useState(meta.limit);
 
   useEffect(() => {
-    // Fetch assignments from server via Redux (1-based page)
-    dispatch(fetchAssignments({ page: page + 1, limit: rowsPerPage }));
+    // Fetch students from server via Redux (1-based page)
+    dispatch(fetchStudents({ page: page + 1, limit: rowsPerPage }));
   }, []);
 
-  // read assignments from redux store
-  const storeAssignments = useSelector((s) => s.assignments?.list || []);
+  // read students from redux store
+  const storeStudents = useSelector((s) => s.students?.list || []);
 
   useEffect(() => {
-    // map store assignments into local display shape
-    const mapped = storeAssignments.map((a) => ({
-      id: a.id,
-      title: a.title,
-      batches: (a.batches || []).map((b) => b.name || b.id),
-      dueDate: a.due_date || a.dueDate || null,
-      gradeType: a.grading_type || a.gradeType || "Auto",
-      totalMarks: a.total_marks || a.totalMarks || 0,
+    // map store students into local display shape
+    const mapped = storeStudents.map((s) => ({
+      id: s.id,
+      name: s.user?.name || s.name || "",
+      email: s.user?.email || s.email || "",
+      batch: s.batch?.name || s.batchName || "N/A",
+      enrollment_date: s.enrollment_date || s.enrollmentDate || null,
     }));
-    setAssignments(mapped);
-  }, [storeAssignments]);
+    setStudents(mapped);
+  }, [storeStudents]);
 
   useEffect(() => {
     // when meta changes, keep local pagination state in sync
@@ -70,40 +68,40 @@ export default function Assignment() {
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
-    dispatch(fetchAssignments({ page: newPage + 1, limit: rowsPerPage }));
+    dispatch(fetchStudents({ page: newPage + 1, limit: rowsPerPage }));
   };
 
   const handleChangeRowsPerPage = (event) => {
     const newLimit = parseInt(event.target.value, 10);
     setRowsPerPage(newLimit);
     setPage(0);
-    dispatch(fetchAssignments({ page: 1, limit: newLimit }));
+    dispatch(fetchStudents({ page: 1, limit: newLimit }));
   };
 
-  const handleEditClick = (assignmentId) => {
-    navigate(path.faculty.EDIT_ASSIGNMENT.replace(":id", assignmentId));
+  const handleEditClick = (studentId) => {
+    navigate(path.faculty.EDIT_STUDENT.replace(":id", studentId));
   };
 
-  const handleDeleteClick = (assignmentId) => {
-    setSelectedAssignmentId(assignmentId);
+  const handleDeleteClick = (studentId) => {
+    setSelectedStudentId(studentId);
     setOpenDeleteDialog(true);
   };
 
   const handleConfirmDelete = async () => {
     try {
-      await dispatch(deleteAssignment(selectedAssignmentId)).unwrap();
+      await dispatch(deleteStudent(selectedStudentId)).unwrap();
       setOpenDeleteDialog(false);
-      setSelectedAssignmentId(null);
+      setSelectedStudentId(null);
       // Refresh the list
-      dispatch(fetchAssignments({ page: page + 1, limit: rowsPerPage }));
+      dispatch(fetchStudents({ page: page + 1, limit: rowsPerPage }));
     } catch (error) {
-      console.error("Failed to delete assignment:", error);
+      console.error("Failed to delete student:", error);
     }
   };
 
   const handleCancelDelete = () => {
     setOpenDeleteDialog(false);
-    setSelectedAssignmentId(null);
+    setSelectedStudentId(null);
   };
 
   return (
@@ -114,20 +112,20 @@ export default function Assignment() {
         alignItems="center"
         sx={{ mb: 2 }}
       >
-        <PageHeader title="Assignments" />
+        <PageHeader title="Students" />
         <Button
           variant="contained"
           startIcon={<AddIcon />}
-          onClick={() => navigate(path.faculty.CREATE_ASSIGNMENT)}
+          onClick={() => navigate(path.faculty.CREATE_STUDENT)}
         >
-          Create Assignment
+          Enroll Student
         </Button>
       </Stack>
 
       <Paper>
-        {assignments.length === 0 ? (
+        {students.length === 0 ? (
           <Box sx={{ p: 3 }}>
-            <Typography>No assignments found.</Typography>
+            <Typography>No students found.</Typography>
           </Box>
         ) : (
           <>
@@ -135,33 +133,31 @@ export default function Assignment() {
               <TableHead>
                 <TableRow>
                   <TableCell>ID</TableCell>
-                  <TableCell>Title</TableCell>
-                  <TableCell>Batches</TableCell>
-                  <TableCell>Due Date</TableCell>
-                  <TableCell>Grading</TableCell>
-                  <TableCell>Total Marks</TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Email</TableCell>
+                  <TableCell>Batch</TableCell>
+                  <TableCell>Enrollment Date</TableCell>
                   <TableCell align="center">Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {assignments.map((a) => (
-                  <TableRow key={a.id} hover>
-                    <TableCell>{a.id}</TableCell>
-                    <TableCell>{a.title}</TableCell>
-                    <TableCell>{a.batches.join(", ")}</TableCell>
+                {students.map((s) => (
+                  <TableRow key={s.id} hover>
+                    <TableCell>{s.id}</TableCell>
+                    <TableCell>{s.name}</TableCell>
+                    <TableCell>{s.email}</TableCell>
+                    <TableCell>{s.batch}</TableCell>
                     <TableCell>
-                      {a.dueDate
-                        ? new Date(a.dueDate).toLocaleDateString()
+                      {s.enrollment_date
+                        ? new Date(s.enrollment_date).toLocaleDateString()
                         : ""}
                     </TableCell>
-                    <TableCell>{a.gradeType}</TableCell>
-                    <TableCell>{a.totalMarks}</TableCell>
                     <TableCell align="center">
                       <Tooltip title="Edit">
                         <IconButton
                           size="small"
                           color="primary"
-                          onClick={() => handleEditClick(a.id)}
+                          onClick={() => handleEditClick(s.id)}
                         >
                           <EditIcon />
                         </IconButton>
@@ -170,7 +166,7 @@ export default function Assignment() {
                         <IconButton
                           size="small"
                           color="error"
-                          onClick={() => handleDeleteClick(a.id)}
+                          onClick={() => handleDeleteClick(s.id)}
                         >
                           <DeleteIcon />
                         </IconButton>
@@ -200,11 +196,11 @@ export default function Assignment() {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">Delete Assignment</DialogTitle>
+        <DialogTitle id="alert-dialog-title">Delete Student</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you sure you want to delete this assignment? This action cannot
-            be undone.
+            Are you sure you want to delete this student? This action cannot be
+            undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>

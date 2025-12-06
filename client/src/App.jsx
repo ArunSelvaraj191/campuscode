@@ -10,6 +10,7 @@ const LandingPage = lazy(() => import("./modules/LandingPage.jsx"));
 const ResetLogin = lazy(() => import("./modules/ResetLogin.jsx"));
 const ResetPassword = lazy(() => import("./modules/ResetPassword.jsx"));
 const FacultyLayout = lazy(() => import("./modules/Faculty/FacultyLayout.jsx"));
+const AdminLayout = lazy(() => import("./modules/Admin/AdminLayout.jsx"));
 const StudentLayout = lazy(() => import("./modules/Student/StudentLayout.jsx"));
 const FacultyDashboard = lazy(() => import("./modules/Faculty/Dashboard"));
 const Assignment = lazy(() => import("./modules/Faculty/Assignment"));
@@ -19,6 +20,13 @@ const AssignmentForm = lazy(() =>
 const StudentDashboard = lazy(() => import("./modules/Student/Dashboard"));
 const Batch = lazy(() => import("./modules/Faculty/Batch"));
 const BatchForm = lazy(() => import("./modules/Faculty/Batch/createBatch.jsx"));
+const Student = lazy(() => import("./modules/Faculty/Student"));
+const StudentForm = lazy(() =>
+  import("./modules/Faculty/Student/CreateStudent.jsx")
+);
+const AdminDashboard = lazy(() => import("./modules/Admin/Dashboard"));
+const AdminFaculty = lazy(() => import("./modules/Admin/Faculty"));
+const AdminSettings = lazy(() => import("./modules/Admin/Settings"));
 
 function App() {
   return (
@@ -54,6 +62,25 @@ function App() {
             <Route path={path.faculty.BATCH} element={<Batch />} />
             <Route path={path.faculty.CREATE_BATCH} element={<BatchForm />} />
             <Route path={path.faculty.EDIT_BATCH} element={<BatchForm />} />
+            <Route path={path.faculty.STUDENT} element={<Student />} />
+            <Route
+              path={path.faculty.CREATE_STUDENT}
+              element={<StudentForm />}
+            />
+            <Route path={path.faculty.EDIT_STUDENT} element={<StudentForm />} />
+          </Route>
+          {/* Admin Routes with Layout */}
+          <Route
+            path={routes.BASE_ADMIN}
+            element={
+              <ProtectedRoute allowedRoles={"admin"}>
+                <AdminLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path={path.admin.DASHBOARD} element={<AdminDashboard />} />
+            <Route path={path.admin.FACULTY} element={<AdminFaculty />} />
+            <Route path={path.admin.SETTINGS} element={<AdminSettings />} />
           </Route>
           {/* Student Routes with Layout */}
           <Route
